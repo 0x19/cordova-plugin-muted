@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="com.github.muted" version="0.1.1">
-  <name>CVDMuted</name>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-muted" version="0.0.1">
+  <name>Muted</name>
   <description>Plugin for cordova designed to tell you if phone is muted or not.</description>
   <license>MIT</license>
   <keywords>cordova,muted</keywords>
@@ -19,11 +19,11 @@
 
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
-        <feature name="CVDMuted">
-            <param name="ios-package" value="CDVMuted"/>
+        <feature name="Muted">
+            <param name="ios-package" value="Muted"/>
         </feature>
     </config-file>
-    <header-file src="src/ios/CDVMuted.h" />
-    <source-file src="src/ios/CDVMuted.m" />
+    <header-file src="src/ios/Muted.h" />
+    <source-file src="src/ios/Muted.m" />
   </platform>
  </plugin>
