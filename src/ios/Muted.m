@@ -1,44 +1,39 @@
-#import "CDVMuted.h"
+#import "Muted.h"
 #import <Cordova/CDV.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 
-#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
-
-
 @implementation Muted
 
-- (bool)isMuted:(CDVInvokedUrlCommand*)command
+- (void)isMuted:(CDVInvokedUrlCommand*)command
 {
-  if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-      float vol = [[AVAudioSession sharedInstance] outputVolume];
+    CDVPluginResult* pluginResult = nil;
+    bool isMuted = false;
 
-      if(vol < 0.1) {
-          return YES;
-      }
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        if([[AVAudioSession sharedInstance] outputVolume] < 0.1) {
+            isMuted = true;
+        }
+    }
 
-      return NO;
-  }
+    MPVolumeView *slide = [MPVolumeView new];
+    UISlider *volumeViewSlider = nil;
 
-  MPVolumeView *slide = [MPVolumeView new];
-  UISlider *volumeViewSlider = nil;
+    for (UIView *view in [slide subviews]){
+        if ([[[view class] description] isEqualToString:@"MPVolumeSlider"]) {
+            volumeViewSlider = (UISlider *) view;
+        }
+    }
 
-  for (UIView *view in [slide subviews]){
-      if ([[[view class] description] isEqualToString:@"MPVolumeSlider"]) {
-          volumeViewSlider = (UISlider *) view;
-      }
-  }
+    if (volumeViewSlider) {
+        if([volumeViewSlider value] < 0.1) {
+            isMuted = true;
+        }
+    }
 
-  if (volumeViewSlider) {
-      float val = [volumeViewSlider value];
-
-      if(val < 0.1) {
-        return YES;
-      }
-  }
-
-  return NO;
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:isMuted];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 @end
